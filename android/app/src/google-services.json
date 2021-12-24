@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "279003250906",
+    "project_id": "key-of-music",
+    "storage_bucket": "key-of-music.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279003250906:android:a38fe92963e75e684ee5e3",
+        "android_client_info": {
+          "package_name": "com.example.key"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279003250906-j0hhmdk2lnjqahnf6ljfp10tt8tchime.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmqycTTP2PnZDWLLW7y5ZX1HLUt2BufPg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279003250906-j0hhmdk2lnjqahnf6ljfp10tt8tchime.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
