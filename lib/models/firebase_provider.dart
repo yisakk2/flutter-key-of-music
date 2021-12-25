@@ -1,4 +1,8 @@
 // models
+import 'dart:html';
+
+import 'package:key/models/playlist.dart';
+import 'package:key/models/song.dart';
 import 'package:key/models/users.dart';
 // screens
 // widgets
@@ -42,10 +46,41 @@ class FirebaseProvider with ChangeNotifier {
     return user;
   }
 
-  Future<DocumentSnapshot> getUsersData2() async {
-    DocumentSnapshot doc = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
+  getUsersLikeData() async {
+    List<Song> songs = [];
+    await FirebaseFirestore.instance.collection('users').doc(_user!.uid).collection('like').get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        Song song = Song.fromDocument(element);
+        songs.add(song);
+      });
+    });
 
-    return doc;
+    return songs;
+  }
+
+  getUsersPlaylists() async {
+    List<String> title = [];
+    await FirebaseFirestore.instance.collection('users').doc(_user!.uid).collection('playlist').doc('playlist').get().then((DocumentSnapshot documentSnapshot) {
+      // return documentSnapshot['title'];
+      // title = documentSnapshot['title'];
+      Playlist playlist = Playlist.fromDocument(documentSnapshot);
+      // print('haha');
+      title = playlist.title;
+    });
+
+    return title;
+  }
+
+  getUsersPlaylistData() async {
+    List<Song> songs = [];
+    await FirebaseFirestore.instance.collection('users').doc(_user!.uid).collection('like').get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        Song song = Song.fromDocument(element);
+        songs.add(song);
+      });
+    });
+
+    return songs;
   }
 
   getImageUrl() async {
@@ -71,6 +106,9 @@ class FirebaseProvider with ChangeNotifier {
             'email': email,
             'imageUrl': 'gs://key-of-music.appspot.com/profile_pic.jpg',
             'nickname': nickname,
+          });
+          await FirebaseFirestore.instance.collection('users').doc(result.user!.uid).collection('playlist').doc('playlist').set({
+            'title': []
           });
           signOut();
           return true;

@@ -228,17 +228,20 @@ class _ProfileState extends State<Profile> {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
-        return CupertinoAlertDialog(
-          title: Text('비밀번호 재설정'),
-          content: Text('귀하의 이메일로 비밀번호 재설정 메일을 보냈습니다.'),
-          actions: [
-            CupertinoDialogAction(
-              child: Text('확인'),
-              onPressed: () {
-                Navigator.pop(ctx);
-              },
-            ),
-          ],
+        return Theme(
+          data: ThemeData.dark(),
+          child: CupertinoAlertDialog(
+            title: Text('비밀번호 재설정'),
+            content: Text('귀하의 이메일로 비밀번호 재설정 메일을 보냈습니다.'),
+            actions: [
+              CupertinoDialogAction(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          ),
         );
       },
     );

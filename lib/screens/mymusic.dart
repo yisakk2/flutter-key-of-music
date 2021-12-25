@@ -1,9 +1,11 @@
 // models
+import 'package:flutter/cupertino.dart';
 import 'package:key/models/firebase_provider.dart';
 // import 'package:key/models/users.dart';
 // screens
-import 'package:key/screens/signin.dart';
+import 'package:key/screens/like.dart';
 import 'package:key/screens/profile.dart';
+import 'package:key/screens/signin.dart';
 // widgets
 import 'package:key/widgets/progress.dart';
 // packages
@@ -18,6 +20,8 @@ class MyMusic extends StatefulWidget {
 }
 
 class _MyMusicState extends State<MyMusic> {
+  var playlistNameController = TextEditingController();
+
   loggedOutPage() {
     return Container(
       child: Center(
@@ -60,7 +64,12 @@ class _MyMusicState extends State<MyMusic> {
             children: [
               // 좋아요 목록
               MaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Like())
+                  );
+                },
                 child: Container(
                   padding: EdgeInsets.fromLTRB(16, 20, 16, 20),
                   decoration: BoxDecoration(
@@ -112,20 +121,22 @@ class _MyMusicState extends State<MyMusic> {
 
   playList(FirebaseProvider fp) {
     return FutureBuilder(
-      future: fp.getUsersData(),
+      future: fp.getUsersPlaylists(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          var playlists = snapshot.data! as List<String>;
           return Padding(
             padding: EdgeInsets.all(20.0),
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 12, right: 12),
+                  padding: EdgeInsets.only(left: 12, right: 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '전체 0',
+                        // '전체 ${snapshot.data.docs.length}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12
@@ -144,6 +155,36 @@ class _MyMusicState extends State<MyMusic> {
                     ],
                   ),
                 ),
+                SizedBox(height: 5,),
+                MaterialButton(
+                  onPressed: () {
+                    addPlayList(fp);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(16, 18, 16, 18),
+                    decoration: BoxDecoration(
+                      color: Colors.white12,
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_outlined, color: Colors.white, size: 24,),
+                        SizedBox(width: 5,),
+                        Text(
+                          '새로 만들기',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10,),
+                playlists.length == 0 ? noPlaylistExists() : playlistExists(),
               ],
             ),
           );
@@ -152,6 +193,69 @@ class _MyMusicState extends State<MyMusic> {
         }
       },
     );
+  }
+
+  addPlayList(FirebaseProvider fp) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Theme(
+          data: ThemeData.dark(),
+          child: CupertinoAlertDialog(
+            title: Text('플레이리스트명', textAlign: TextAlign.left, style: TextStyle(fontSize: 20)),
+            content: Padding(
+              padding: EdgeInsets.fromLTRB(8, 24, 8, 0),
+              child: CupertinoTextField(
+                controller: playlistNameController,
+                autofocus: true,
+                padding: EdgeInsets.all(12.0),
+                style: TextStyle(color: Colors.white),
+                decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text('취소', style: TextStyle(color: Colors.white30, fontSize: 14),),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text('확인', style: TextStyle(fontSize: 14),),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  noPlaylistExists() {
+    return SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: Center(
+        child: Text(
+          '플레이리스트가 없습니다.',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20
+          ),
+        ),
+      ),
+    );
+  }
+
+  playlistExists() {
+    return SizedBox();
   }
 
   loggedInAction(FirebaseProvider fp) {
@@ -187,9 +291,9 @@ class _MyMusicState extends State<MyMusic> {
       appBar: AppBar(
         title: Text('내음악'),
         backgroundColor: Colors.black,
-        actions: [
-          if (fp.getUser() != null) loggedInAction(fp)
-        ],
+        // actions: [
+        //   if (fp.getUser() != null) loggedInAction(fp)
+        // ],
       ),
       body: fp.getUser() == null ? loggedOutPage() : loggedInPage(fp)
     );

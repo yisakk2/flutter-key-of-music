@@ -141,6 +141,7 @@ class _SearchState extends State<Search> {
           return circularProgress();
         }
         else {
+          print(snapshot.data!);
           List<ChildItem> searchSongResult = [];
           List<DocumentSnapshot> docs = snapshot.data!.docs;
           docs.forEach((document) {
@@ -198,17 +199,20 @@ class ChildItem extends StatelessWidget {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return CupertinoAlertDialog(
-            title: Text(songData.title, textAlign: TextAlign.left, style: TextStyle(fontSize: 20)),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(songData.singer),
-                Text(" "),
-                Text('진성: ${songData.key}'),
-                if (songData.falsetto != "") Text('가성: ${songData.falsetto}'),
-                Text('장르: ${songData.genre}')
-              ],
+          return Theme(
+            data: ThemeData.dark(),
+            child: CupertinoAlertDialog(
+              title: Text(songData.title, textAlign: TextAlign.left, style: TextStyle(fontSize: 20)),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(songData.singer, style: TextStyle(color: Colors.grey),),
+                  Text(" "),
+                  Text('진성: ${songData.key}', style: TextStyle(color: Colors.grey),),
+                  if (songData.falsetto != "") Text('가성: ${songData.falsetto}', style: TextStyle(color: Colors.grey),),
+                  Text('장르: ${songData.genre}', style: TextStyle(color: Colors.grey),)
+                ],
+              ),
             ),
           );
         }
